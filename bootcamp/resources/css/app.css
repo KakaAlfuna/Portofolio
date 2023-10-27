@@ -1,0 +1,44 @@
+#datatable_wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#datatable {
+    width: 100%;
+    clear: both;
+    margin-bottom: 6px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+#datatable thead th {
+    background-color: #f2f2f2;
+    text-align: center;
+    font-weight: bold;
+}
+
+#datatable tbody td {
+    text-align: center;
+}
+
+#datatable_wrapper .dataTables_info {
+    clear: both;
+    float: left;
+    padding-top: 0.755em;
+}
+
+#datatable_wrapper .dataTables_paginate {
+    float: right;
+    text-align: right;
+    padding-top: 0.25em;
+}
+
+#datatable_filter {
+    float: right;
+    padding-top: 0.25em;
+}
+
+#datatable_filter label {
+    margin-right: 5px;
+}
