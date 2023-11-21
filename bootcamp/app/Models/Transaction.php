@@ -11,7 +11,7 @@ class Transaction extends Model
 
     public function member()
     {
-        return $this->belongsTo(Member::class, 'class_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
     public function nameClass()
     {

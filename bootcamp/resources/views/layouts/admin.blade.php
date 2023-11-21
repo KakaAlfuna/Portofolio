@@ -32,6 +32,8 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 
   <link rel="stylesheet" href="resources\css\app.css">
+
+  <script src="https://kit.fontawesome.com/db70eec05c.js" crossorigin="anonymous"></script>
   @yield('css')
 
   <!-- =======================================================
@@ -143,6 +145,13 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
+      <li class="nav-item">
+        <a class="nav-link {{ request()->is('bootcamps') ? '' : 'collapsed' }}" href="{{ url('bootcamps') }}">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Product</span>
+        </a>
+      </li>
+      
       <li class="nav-item">
         <a class="nav-link {{ request()->is('home') ? '' : 'collapsed' }}" href="{{ url('home') }}">
           <i class="bi bi-grid"></i>

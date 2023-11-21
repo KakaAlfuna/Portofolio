@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BootcampController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MentorController;
@@ -33,6 +34,7 @@ Route::resources([
     'nameClasses'=> NameClassController::class,
     'schedules'=> ScheduleController::class,
     'transactions'=> TransactionController::class,
+    'bootcamps'=> BootcampController::class,
 ]);
 
 
@@ -40,3 +42,6 @@ Route::get('/api/members', [App\Http\Controllers\MemberController::class, 'api']
 Route::get('/api/nameClasses', [App\Http\Controllers\NameClassController::class, 'api']);
 Route::get('/api/mentors', [App\Http\Controllers\MentorController::class, 'api']);
 Route::get('/api/transactions', [App\Http\Controllers\TransactionController::class, 'api']);
+Route::get('/api/bootcamps', [App\Http\Controllers\BootcampController::class, 'api']);
+
+Route::post('/checkout', [App\Http\Controllers\BootcampController::class, 'checkout']);

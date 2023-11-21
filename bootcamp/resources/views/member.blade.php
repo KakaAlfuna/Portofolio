@@ -122,6 +122,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ url('/api/members') }}",
+            order: [[0, 'desc']],
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', class: "text-center"},
                 {data: 'name', name: 'name', class: "text-center"},

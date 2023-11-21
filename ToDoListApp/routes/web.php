@@ -25,3 +25,4 @@ Route::resources([
     'home' => HomeController::class,
 ]);
 Route::get('/api/home', [App\Http\Controllers\HomeController::class, 'api']);
+Route::put('/home/status/${id}', [App\Http\Controllers\HomeController::class, 'status']);

@@ -19,7 +19,7 @@ class TransactionController extends Controller
     }
     public function api()
     {
-        $transactions = Transaction::with('nameclass','member')->get();
+        $transactions = Transaction::with('nameclass','member')->orderBy('created_at','desc')->get();
         $datatable = datatables()->of($transactions)->addIndexColumn();
 
         return $datatable->make(true);

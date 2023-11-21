@@ -19,6 +19,7 @@
                             <th>#</th>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>Status</th>
                             <th>Schedule</th>
                             <th>Deadline</th>
                             <th>Action</th>
@@ -52,15 +53,19 @@
                                     <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                     <label>Scehdule</label>
-                                    <input type="datetime-local" name="time_start" class="form-control" v-model="data.time_start" placeholder="Enter Scehdule" >
+                                    <input type="dateTime" name="time_start" class="form-control" v-model="data.time_start" placeholder="Enter Scehdule" >
                                     @error('time_start')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                     <label>Deadline</label>
-                                    <input type="datetime-local" name="time_end" class="form-control" v-model="data.time_end" placeholder="Enter Deadline" >
+                                    <input type="dateTime" name="time_end" class="form-control" v-model="data.time_end" placeholder="Enter Deadline" >
                                     @error('time_end')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
+                                    <div class="form-check form-switch" v-show="editStatus">
+                                        <input class="form-check-input" type="checkbox" id="status" v-model="data.status">
+                                        <label class="form-check-label" for="status">Done</label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer justify-content-between">
@@ -86,6 +91,7 @@
         {data: 'DT_RowIndex',class: 'text-center', orderable: false},
         {data: 'title',class: 'text-center', orderable: false},
         {data: 'description',class: 'text-center', orderable: false},
+        {data: 'status',class: 'text-center', orderable: false},
         {data: 'time_start',class: 'text-center', orderable: false},
         {data: 'time_end',class: 'text-center', orderable: false},
         {
@@ -93,8 +99,10 @@
             className: 'text-center',
             orderable: false,
             render: function(data, type, row, meta) {
-                return `<a class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-default" onclick="controller.editData(event, ${meta.row})">Edit</a>
-                        <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${row.id}, ${meta.row})">Delete</a>`;
+                let actionButtons = `<a class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal-default" onclick="controller.editData(event, ${meta.row})">Edit</a>
+                                    <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${row.id}, ${meta.row})">Delete</a>`;
+                
+                return actionButtons;
             }
         },
     ];
@@ -122,9 +130,24 @@
                             columns: columns,
                         });
                     })
+                    .then(response=> {
+                        _this.checkDeadlineStatus();
+                    })
                     .catch(error => {
                         console.error('Error fetching data:', error);
                     })
+            },
+            checkDeadlineStatus() {
+                const now = new Date();
+                
+                this.datas.forEach(data => {
+                    if (data.status === 'pending') {
+                        const deadline = new Date(data.time_end);
+                        if (now > deadline) {
+                            alert(`The task "${data.title}" has exceeded the deadline!`);
+                        }
+                    }
+                });
             },
             addData() {
                 this.data = {};
@@ -133,6 +156,8 @@
             editData(event, row) {
                 this.data = { ...this.datas[row] };
                 this.editStatus = true;
+
+                this.data.status === 'done' ? this.data.status = true : this.data.status = false;
             },
             deleteData(event, id, index) {
                 if (confirm("Are you sure you want to delete this item?")) {
@@ -150,12 +175,28 @@
             submitForm(event, id) {
                 event.preventDefault();
                 const _this = this;
+                
+                const status = this.data.status ? 'done' : 'pending';
+
+                const formData = new FormData($(event.target)[0]);
+                formData.append('status', status);
+
                 const actionUrl = !this.editStatus ? this.actionUrl : this.actionUrl + '/' + id;
-                axios.post(actionUrl, new FormData($(event.target)[0]))
+                axios.post(actionUrl, formData)
                     .then(response => {
-                    $('#modal-default').modal('hide');
+                        $('#modal-default').modal('hide');
+                        _this.updateStatusLocally(id, status);
+                    })
+                    .catch(error => {
+                        console.error('Error submitting form:', error);
+                    });
+            },
+            updateStatusLocally(id, status) {
+                const index = this.datas.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    this.datas[index].status = status;
                     location.reload();
-                });
+                }
             },
         }
     });
