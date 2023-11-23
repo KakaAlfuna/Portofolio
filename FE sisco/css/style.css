@@ -1,6 +1,10 @@
-header {
-    height: 100px;
+header{
+    height: 70px;
+    width: 100%;
     padding: 1px solid;
+    position: fixed;
+    z-index: 1000;
+    background-color: white;
 }
 header h1 {
     padding: 15px ;
@@ -29,8 +33,53 @@ header ul li a{
     text-decoration: none;
 }
 header ul li a:hover{
-    color: rgb(195, 150, 150);
+    color: darkorange;
 }
+h1 {
+    padding: 15px ;
+    float: left;
+}
+h1 a {
+    color: black;
+    text-decoration: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+h1 a:hover {
+    color: black;
+}
+ul {
+    padding: 1px solid;
+    float: right;
+    padding: 10px 0px;
+}
+ul li {
+    display: inline-block;
+}
+ul li a{
+    display: inline-block;
+    padding: 20px 20px;
+    color: black;
+    text-decoration: none;
+}
+ul li a:hover{
+    color: darkorange;
+}
+.banner-opacity {
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-opacity img {
+    width: 360px;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease-in-out; 
+}
+
+.banner-opacity:hover img {
+    transform: scale(1.1);
+}
+
 .shop-top {
     border-top: solid 1px #e6e6e6;
     padding: 10px;
@@ -44,6 +93,7 @@ header ul li a:hover{
 }
 .btn-buy{
     background-color: black;
+    position: relative;
     color: white;
     transition-duration: 0.4s;
     cursor: pointer;
@@ -52,18 +102,67 @@ header ul li a:hover{
     background-color: white;
     border: 2px solid;
 }
-.sosmed {
-    text-align: center;
+.footer {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    font-family: sans-serif;
 }
 
-.sosmed ul {
+.column {
+    width: 40%;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    border: 1px;
+}
+.column p i {
+    color: darkorange;
+}
+.column p {
+    color: darkgrey;
+}
+.column p a {
+    color: darkgrey;
+    text-decoration: none;
+}
+.column p a:hover{
+    color: darkorange;
+}
+
+.left-column, .right-column {
+    width: 30%;
+}
+
+.middle-column {
+    width: 30%;
+}
+
+.column h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.column p, .column ul {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.column .sosmed h5 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+}
+
+.column .sosmed-icons {
     display: flex;
     justify-content: center;
-    list-style: none;
-    padding: 0;
+    align-items: center;
+    gap: 10px; /* Jarak antara ikon-ikon */
+    font-size: 24px; /* Sesuaikan ukuran ikon */
 }
 
-.sosmed ul li {
-    display: inline-block;
-    margin: 10px 10px;
-}
+
+
+
