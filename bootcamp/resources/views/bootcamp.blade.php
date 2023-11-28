@@ -43,7 +43,7 @@
                 <h2>Keranjang Belanja</h2>       
                 <ul class="list-group">
                     <li class="list-group-item" v-for="(item, index) in cart" :key="index">
-                        @{{ item.name_class }} - Rp. @{{ item.price }}
+                        @{{ item.name_class }} - Rp. @{{ item.price }} x @{{ item.quantity }}
                         <button class="btn btn-danger btn-sm float-right" @click="removeFromCart(index)">Hapus</button>
                     </li>
                 </ul>
@@ -87,13 +87,22 @@
                 },
                 addToCart(classItem) {
                     const selectedMemberId = this.selectedMemberId;
+                    const existingItemIndex = this.cart.findIndex(item => item.id === classItem.id && item.member_id === selectedMemberId);
+
                     if (this.selectedMemberId) {
-                        this.cart.push({
-                            member_id: this.selectedMemberId,
-                            id: classItem.id,
-                            name_class: classItem.name_class,
-                            price: 100
-                        });
+                        if (existingItemIndex > -1) {
+                            // Jika item sudah ada dalam keranjang, tambahkan quantity-nya
+                            this.cart[existingItemIndex].quantity += 1; // Menambah kuantitas
+                        } else {
+                            // Jika item belum ada dalam keranjang, tambahkan sebagai item baru
+                            this.cart.push({
+                                member_id: this.selectedMemberId,
+                                id: classItem.id,
+                                name_class: classItem.name_class,
+                                price: 100,
+                                quantity: 1 // Menginisialisasi kuantitas menjadi 1
+                            });
+                        }
                     } else {
                         alert('Pilih anggota sebelum menambahkan ke keranjang belanja.');
                     }
@@ -103,15 +112,29 @@
                 },
                 checkout() {
                     if (this.cart.length > 0) {
-                        axios.post('/checkout', { cart: this.cart })
+                        // Mengalikan setiap item dalam keranjang dengan kuantitasnya
+                        const itemsToPush = [];
+
+                        this.cart.forEach(item => {
+                            for (let i = 0; i < item.quantity; i++) {
+                                const multipliedItem = {
+                                    id: item.id,
+                                    member_id: item.member_id,
+                                    name_class: item.name_class,
+                                    price: item.price,
+                                };
+                                itemsToPush.push(multipliedItem);
+                            }
+                        });
+
+                        // Kirim itemsToPush ke server sebagai bagian dari proses checkout
+                        axios.post('/checkout', { cart: itemsToPush })
                             .then(response => {
-                                console.log('Checkout berhasil:', this.cart);
-                                this.cart = []; // Kosongkan keranjang setelah checkout berhasil
-                                // Tambahkan logika lain sesuai kebutuhan, misalnya navigasi halaman, dll.
+                                console.log('Checkout berhasil:', itemsToPush);
+                                this.cart = []; // Mengosongkan keranjang setelah checkout berhasil
                             })
                             .catch(error => {
                                 console.error('Error saat checkout:', error);
-                                // Tambahkan penanganan kesalahan jika diperlukan
                             });
                     } else {
                         alert('Keranjang belanja kosong. Tambahkan item sebelum checkout.');
@@ -120,7 +143,7 @@
             },
             computed: {
                 totalCartPrice() {
-                    return this.cart.reduce((total, item) => total + item.price, 0);
+                    return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
                 }
             },
         });
